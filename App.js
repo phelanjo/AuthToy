@@ -1,13 +1,25 @@
-const http = require("http");
-const hostname = '127.0.0.1';
-const port = 3000;
+const axios = require('axios')
+const readlineSync = require('readline-sync')
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello Johnny\n');
-});
+const login = () => {
+  var username = readlineSync.question('Username: ')
+  var password = readlineSync.question('Password: ', { hideEchoBack: true })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+    axios.post('https://api.cbtnuggets.com/auth-gateway/v1/login', {
+      username: username,
+      password: password
+    })
+    .then(function (response) {
+      if (response.status == 200) {
+        console.log(`Success`)
+        console.log(`Token: ` + response.data.access_token)
+      }
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+}
+
+login()
+
+
